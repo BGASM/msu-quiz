@@ -1,0 +1,1 @@
+web: gunicorn "msucom_qbank:create_app()"
