@@ -1,1 +1,1 @@
-web: gunicorn "msucom_qbank:create_app()"
+web: gunicorn "msu-quiz:create_app()"

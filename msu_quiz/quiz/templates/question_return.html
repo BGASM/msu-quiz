@@ -1,0 +1,41 @@
+<div class="jumbotron" id="test_question" style="padding-bottom: 10px; padding-top: 20px;">
+  <h1 class="display-6">Question: {{ test_no }}</h1>
+  <p class="lead">{{ question_body }}</p>
+    <hr class="my-4">
+    <form>
+        <div class="form-group" id="mcq_group" data-mcq_no="{{ test_no }}">
+            {% for mc in mcq %}
+                <div class="form-check">
+                    <label class="form-check-label" data-children-count="1">
+                      <input type="radio" class="form-check-input" name="mcq" id="{{ test_no }}{{ mc }}" value="{{ test_no }}{{ mc }}">
+                        {{ mc }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        console.log("In ready function.")
+        if(sessionStorage.getItem("ans_sel_{{test_no}}") != undefined){
+            console.log(sessionStorage.getItem("ans_sel_{{test_no}}"))
+            var ansselvalue = sessionStorage.getItem("ans_sel_{{test_no}}");
+            $("input[name='mcq'][value='"+ ansselvalue +"']").attr('checked', 'checked')
+        };
+    })
+
+    mcqs = document.getElementsByName("mcq");
+    for (var i = 0 ; i < mcqs.length; i++) {
+        mcqs[i].addEventListener("change", load_local);
+    }
+
+    function load_local() {
+            console.log("Setting local storage.")
+            var mcq_no = document.getElementById("mcq_group").dataset.mcq_no;
+            var mc_sel = document.querySelector('input[name="mcq"]:checked').value;
+            console.log(mcq_no, mc_sel)
+            sessionStorage.setItem("ans_sel_"+mcq_no, mc_sel);
+        }
+</script>

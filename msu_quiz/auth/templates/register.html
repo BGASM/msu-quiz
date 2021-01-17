@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Signup{% endblock %}
+{% block head %}{{ super() }}{% endblock %}}
+{% block page_header %}Signup - MSUCOM Class of 2024 Qbank{% endblock %}
+{% block page_header_p %}
+{% endblock %}
+{% block content %}
+<form action="/auth/register" method="post">>
+  <fieldset>
+    <legend>Signup</legend>
+    <div class="form-group" data-children-count="1">
+      <label for="name">Name*</label>
+      <input type="name" name="name" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Mona Lisa" data-kwimpalastatus="alive" data-kwimpalaid="1610845851279-3" required>
+      <small id="nameHelp" class="form-text text-muted">Real name or alias are all good.</small>
+    </div>
+    <div class="form-group" data-children-count="1">
+      <label for="username">Username*</label>
+      <input type="username" name="username" class="form-control" id="username" placeholder="KoolDoktorGuy" data-kwimpalastatus="alive" data-kwimpalaid="1610845851279-2" required>
+    </div>
+    <div class="form-group" data-children-count="1">
+      <label for="password">Password*</label>
+      <input type="password" name="password" class="form-control" id="password" placeholder="Password" data-kwimpalastatus="alive" data-kwimpalaid="1610845851279-0">
+    </div>
+    <div class="form-group" data-children-count="1">
+      <label for="exampleInputEmail1">Email address</label>
+      <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" data-kwimpalastatus="alive" data-kwimpalaid="1610845851279-2">
+      <small id="emailHelp" class="form-text text-muted">E-mail address is optional, I probably won't ever send you anything.</small>
+    </div>
+    <button type="submit" class="btn btn-primary" value="Log In">Submit</button>
+  </fieldset>
+</form>
+{% endblock %}

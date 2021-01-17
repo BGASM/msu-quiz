@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="BGASM">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css" integrity="sha384-8iuq0iaMHpnH2vSyvZMSIqQuUnQA7QM+f6srIdlgBrTSEyd//AWNMyEaSF2yPzNQ" crossorigin="anonymous">
+    <title>Practice Quiz - MSU Class 2024 Qbank</title>
+
+    <script type="text/javascript">
+    $(window).on('load', function() {
+        $('#startModal').modal('show');
+    });
+</script>
+</head>
+
+  <body>
+    <div class ="modal" id="startModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Begin Exam?</h5>
+              </div>
+              <div class="modal-body">
+                <p>Timer will start once you click start</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Start!</button>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main d-flex flex-column min-vh-100">
+        <div class="navbar navbar-expand-sm sticky-top navbar-dark bg-primary" style>
+          <div class="container">
+              <a class="navbar-brand" href="{{ url_for('index') }}">MSU Class 2024 Qbank</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('quiz.quiz') }}">Practice</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('quiz.add_question') }}">Add Quiz</a>
+                  </li>
+                </ul>
+              </div>
+          </div>
+        </div>
+
+	<div class="d-flex flex-row">
+		<div class="nav">
+				<div class="card text-white bg-primary mb-3">
+                <div class="card-header">Questions</div>
+                <div class="card-body">
+                <ul class="navbar-nav " id="question_list">
+                    {% for question in qlist %}
+                    <li>
+                        <button
+                            type="button"
+                            class="btn btn-link"
+                            id="{{ question[0] }}"
+                            data-test_no="{{ question[0] }}"
+                            data-question="{{ question[1]}}"
+                            data-qid="{{question[2]}}">{{ question[0] }}</button>
+                    </li>
+                    {% endfor %}
+                </ul>
+              </div>
+            </div>
+        </div>
+        <div class="p-2 flex-grow-1 align-self-stretch">
+            <div id="question_placement" style="max-width: 980px;"></div>
+
+            <div class="btn-group" role="group" id="btn-group" hidden>
+                <button class="btn btn-primary" type="button" value="Previous">
+                    Previous
+                </button>
+                <button class="btn btn-primary" type="button" value="Next">
+                    Next
+                </button>
+                <button class="btn btn-primary" type="button" value="Flag">
+                    Flag
+                </button>
+            </div>
+
+            <div class="row">
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+
+				</div>
+				<div class="col-md-4"></div>
+			</div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+        var q_no = 1;
+        var max_q_no = document.getElementById("question_list").getElementsByTagName("li").length
+        console.log(max_q_no)
+        $('#startModal').on('click', 'button', function(){
+            var quid = document.getElementById(1);
+            document.getElementById("btn-group").hidden = false;
+            get_question(quid.dataset.qid, quid.dataset.question, quid.dataset.test_no);
+        });
+
+        $('body').on('click', '.btn-group button', function(e){
+            var btn_sel = $(this).val()
+            console.log(btn_sel)
+            if (btn_sel == 'Next'){
+                if (q_no < max_q_no) {
+                    q_no++;
+                    var id = document.getElementById(q_no);
+                    get_question(id.dataset.qid, id.dataset.question, id.dataset.test_no);
+                }
+            } else if (btn_sel == 'Previous'){
+                if (q_no > 1){
+                    q_no--;
+                    var id = document.getElementById(q_no);
+                    get_question(id.dataset.qid, id.dataset.question, id.dataset.test_no);
+                }
+            } else if (btn_sel == 'Flag'){
+                alert(btn_sel)
+            }
+        });
+
+        function get_question(q_id, question, t_no) {
+            console.log(q_id)
+            $.ajax({
+                type: 'get',
+                url: "{{ url_for('quiz.question_return')}}",
+                data: {id: q_id, question: question, t_no: t_no},
+                success: function (response) {
+                    $("#question_placement").html(response)
+                },
+                error: function (result) {
+                    alert('oops');
+                }
+            });
+        }
+
+        $('#question_list').on('click', 'button', function(e){
+            var id = document.getElementById(e.target.id);
+            q_no = id.dataset.test_no;
+            get_question(id.dataset.qid, id.dataset.question, id.dataset.test_no);
+        });
+    </script>
+
+  </body>
+</html>

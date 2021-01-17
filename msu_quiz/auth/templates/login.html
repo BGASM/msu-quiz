@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}{{ super() }}{% endblock %}}
+{% block page_header %}Login - MSUCOM Class of 2024 Qbank{% endblock %}
+{% block page_header_p %}
+{% endblock %}
+{% block content %}
+<form action="/auth/login" method="post">>
+  <fieldset>
+    <div class="form-group" data-children-count="1">
+      <label for="username">Username*</label>
+      <input type="username" name="username" class="form-control" id="username" placeholder="KoolDoktorGuy" data-kwimpalastatus="alive" data-kwimpalaid="1610845851279-2" required>
+    </div>
+    <div class="form-group" data-children-count="1">
+      <label for="password">Password*</label>
+      <input type="password" name="password" class="form-control" id="password" placeholder="Password" data-kwimpalastatus="alive" data-kwimpalaid="1610845851279-0">
+    </div>
+    <button type="submit" class="btn btn-primary" value="Log In">Submit</button>
+  </fieldset>
+</form>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+{{ super() }}
+<script type="text/javascript">
+    $(window).on('load', function() {
+        var usr = "{{ user }}";
+        if(usr != ''){document.getElementById("if-user").hidden = false;}
+    });
+</script>
+{% endblock %}}
+{% block page_header %}MSUCOM Class of 2024 Qbank{% endblock %}
+{% block page_header_p %}
+<div id="if-user" hidden><p>Welcome back, {{ user }}</p></div>
+<p>Select what you would like to do.</p>
+{% endblock %}
+
+{% block content %}
+<div class="bs-docs-section">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="formWrapper">
+                <form action="/" method="post">
+                    <input class="btn btn-primary" type="submit" name = "practice" value="Practice" />
+                    <input class="btn btn-primary" type="submit" name = "add" value="Add Questions" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
