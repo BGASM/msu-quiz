@@ -1,14 +1,14 @@
 <div class="jumbotron" id="test_question" style="padding-bottom: 10px; padding-top: 20px;">
   <h1 class="display-6">Question: {{ test_no }}</h1>
-  <p class="lead">{{ question_body }}</p>
+  <p class="lead">{{ question }}</p>
     <hr class="my-4">
     <form>
         <div class="form-group" id="mcq_group" data-mcq_no="{{ test_no }}">
-            {% for mc in mcq %}
+            {% for mc in mcqs %}
                 <div class="form-check">
                     <label class="form-check-label" data-children-count="1">
-                      <input type="radio" class="form-check-input" name="mcq" id="{{ test_no }}{{ mc }}" value="{{ test_no }}{{ mc }}">
-                        {{ mc }}
+                      <input type="radio" class="form-check-input" name="mcq" id="{{ test_no }}{{ mc[0] }}" value="{{ mc[0] }}">
+                        {{ mc[1] }}
                     </label>
                 </div>
             {% endfor %}
@@ -19,9 +19,10 @@
 <script type="text/javascript">
     $(document).ready(function() {
         console.log("In ready function.")
-        if(sessionStorage.getItem("ans_sel_{{test_no}}") != undefined){
-            console.log(sessionStorage.getItem("ans_sel_{{test_no}}"))
-            var ansselvalue = sessionStorage.getItem("ans_sel_{{test_no}}");
+        console.log(sessionStorage);
+        if(sessionStorage.getItem("{{test_no}}") != undefined){
+            console.log(sessionStorage.getItem("{{test_no}}"))
+            var ansselvalue = sessionStorage.getItem("{{test_no}}");
             $("input[name='mcq'][value='"+ ansselvalue +"']").attr('checked', 'checked')
         };
     })
@@ -36,6 +37,6 @@
             var mcq_no = document.getElementById("mcq_group").dataset.mcq_no;
             var mc_sel = document.querySelector('input[name="mcq"]:checked').value;
             console.log(mcq_no, mc_sel)
-            sessionStorage.setItem("ans_sel_"+mcq_no, mc_sel);
+            sessionStorage.setItem(""+mcq_no, mc_sel);
         }
 </script>
