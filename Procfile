@@ -1,1 +1,1 @@
-web: gunicorn "msu-quiz:create_app()"
+web: gunicorn "msu_quiz:create_app()"
