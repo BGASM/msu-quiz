@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Review{% endblock %}
+{% block head %}{{ super() }}
+{% endblock %}
+{% block page_header %}Exam Review{% endblock %}
+{% block page_header_p %}
+{% endblock %}
+{% block content %}
+<div class="jumbotron">
+  <h1 class="display-3">You scored </h1>
+  <p class="lead">This is a prototype. In the future exam review will be similar to Examplify.</p>
+  <hr class="my-4">
+  {% for index in qlist %}
+    <p>{{ index.test_no}}) {{index.question}}</p>
+    {% for mcq in index.mcq %}
+      {% if index.answer == False %}
+          {% if mcq.id == index.choice %}
+            <p class="text-danger">{{mcq.mc}}</p>
+          {% else %}
+            <p>{{mcq.mc}}</p>
+          {% endif %}
+      {% else %}
+          {% if mcq.id == index.choice %}
+            <p class="text-success">{{mcq.mc}}</p>
+          {% else %}
+          <p>{{mcq.mc}}</p>
+          {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+  </p>
+</div>
+{% endblock %}

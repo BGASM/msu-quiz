@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block title %}Add Question{% endblock %}
+{% block head %}{{ super() }}
+{% assets "post_form_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}{% endblock %}}
+
+{% block page_header %}Input Qbank{% endblock %}
+{% block page_header_p %}
+<p>Enter all questions and answers.</p>
+<p>Separate Q&A blocks with '!!'. Separate Q from A with '$' </p>
+<p>Separate multiple choice options with '|' with the correct answer listed first.</p>
+{% endblock %}
+{% block content %}
+<form method="POST" action="/add_question">
+      {{ form.csrf_token }}
+
+      <div class="form-group" data-children-count="1">
+        {{ form.quiz.label(class="col-form-label") }}:
+        {{ form.quiz(class="form-control", placeholder='Really Smart Quiz') }}
+        {% if form.quiz.errors %}
+          <ul class="errors">
+            {% for error in form.quiz.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+    <div class="form-group" data-children-count="1">
+        {{ form.course.label(class="col-form-label") }}:
+        {{ form.course(class="form-control", placeholder='MOOSE101') }}
+        {% if form.course.errors %}
+          <ul class="errors">
+            {% for error in form.course.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+    <div class="form-group" data-children-count="1">
+        {{ form.question.label(class="col-form-label") }}:
+        {{ form.question(class="form-control", rows="15", cols="80") }}
+        {% if form.question.errors %}
+          <ul class="errors">
+            {% for error in form.question.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div>
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+</form>
+{% endblock %}
+

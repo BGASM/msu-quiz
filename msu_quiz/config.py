@@ -11,6 +11,13 @@ class Config(object):
     FLASK_APP = environ.get('FLASK_APP')
     FLASK_ENV = environ.get('FLASK_ENV')
 
+
+    # Static Assets
+    STATIC_FOLDER = "static"
+    TEMPLATES_FOLDER = "templates"
+    COMPRESSOR_DEBUG = True
+
+
     # Database
     SQLALCHEMY_DATABASE_URI = environ['DATABASE_URL']
     SQLALCHEMY_ECHO = False
@@ -29,6 +36,7 @@ class StagingConfig(Config):
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
+    SEND_FILE_MAX_AGE_DEFAULT = 0
 
 
 class TestingConfig(Config):
