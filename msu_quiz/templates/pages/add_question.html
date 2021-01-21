@@ -1,15 +1,48 @@
 {% extends "layout.html" %}
 {% block title %}Add Question{% endblock %}
 {% block head %}{{ super() }}
-{% assets "post_form_js" %}
-<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}{% endblock %}}
+<script type="text/javascript">
+$(document).ready(function () {
+    var form = document.getElementById("formData");
+    console.log(form)
+
+    form.onsubmit = function () {
+        var formData = new FormData(form);
+        console.log(formData)
+        var data = JSON.stringify(Object.fromEntries(formData));
+        var url = form.getAttribute('action');
+        console.log(data)
+        console.log(url)
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            success: window.location.replace('${response.data}'),
+            contentType: 'application/json; charset=ytf-8'
+        });
+        return false;
+    };
+});
+</script>
+{% endblock %}}
 
 {% block page_header %}Input Qbank{% endblock %}
 {% block page_header_p %}
-<p>Enter all questions and answers.</p>
-<p>Separate Q&A blocks with '!!'. Separate Q from A with '$' </p>
-<p>Separate multiple choice options with '|' with the correct answer listed first.</p>
+<p>Enter all questions and answers in a single document.</p>
+<p>My script can parse a few different styles of input, but the following default is best, and will avoid errors:</p>
+<p>1. This is a question, it can be as long as you like, or as short. It starts with a number and a period, but a paraentheses would have been fine too.</p>
+<p>A) This is a multiple choice option.</p>
+<p>B. This is also a multiple choice option.</p>
+<p>(C) Wow! Me too!</p>
+<p>D I might work too, but I can also be a little tricky.</p>
+<br>
+<p></p>2) You notice I put a blank line between questions. This is important. It is how my script will tell where one question's multiple choice ends, and the next question begins.</p>
+<p></p>A) Oh, you'll also notice I switched up the format for my question index!</p>
+<p>B. Numbers dont have to be sequential, they just tell my script where to look.</p>
+<p>c. OH! I should have mentioned this earlier, but - your CORRECT answer needs to be FIRST.</p>
+<p>(D) Don't worry though, my script randomizes all of the questions AND all of the multiple choice options every time you run the script.</p>
+<p>E) So you can run the same exam multiple times without memorizing the answer position.</p>
+<p>E. You may have also noticed I'm adding a lot of multiple choices, you can add as many as you want!</p>
 {% endblock %}
 {% block content %}
 <form method="POST" action="/add_question">
@@ -39,7 +72,32 @@
 
     <div class="form-group" data-children-count="1">
         {{ form.question.label(class="col-form-label") }}:
-        {{ form.question(class="form-control", rows="15", cols="80") }}
+        {{ form.question(class="form-control", rows="15", cols="80", placeholder="
+1. A 21-year-old male has been brought to the emergency room after
+being hit by a car on his motor scooter. He is conscious but cannot
+move his legs. You test his deep tendon reflexes. What is the MOST
+likely finding?
+A. he exhibits exaggerated knee extension to patellar tendon tap
+B. he exhibits little or no knee extension to patellar tendon tap
+C. his ankles exhibit clonus
+D. his legs are in a state of tonic extension
+E. his patellar reflexes in both legs are normal
+
+2. Which of the following structures plays a major role in integrating and controlling CNS autonomic
+commands?
+a. Cerebellum
+b. Occipital Lobe
+c. Optic Nerve
+d. Hypothalamus
+
+3. A patient is seen following a sports injury that resulted in damage to the right carotid artery. Upon
+examination, the patient’s right eyelid is drooped, and the right side of their face is dry, despite the left side
+sweating. Which of the following additional signs would you most likely expect to see?
+a. Both pupils dilated
+b. The right pupil dilated, the left normal
+c. The right pupil constricted, the left normal
+d. The right pupil normal, the left dilated
+e. The right pupil normal, the left constricted") }}
         {% if form.question.errors %}
           <ul class="errors">
             {% for error in form.question.errors %}

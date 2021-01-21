@@ -2,14 +2,31 @@
 {% block title %}Index{% endblock %}
 {% block head %}
 {{ super() }}
-<script src="/static/src/js/index_usr_welcome.js" charset="utf-8"></script>
+
 {% endblock %}}
 {% block page_header %}MSUCOM Class of 2024 Qbank{% endblock %}
 {% block page_header_p %}
-<div id="if-user" hidden><p>Welcome back, {{ user }}</p></div>
-<p>Select what you would like to do.</p>
+
 {% endblock %}
 {% block content %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#home">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#planned">Planned Features</a>
+  </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+  <div class="tab-pane fade show active" id="home">
+    <p>This is a repository for practice exams made by peers. Please register in order to view and add your own exams. It is just a formality, I thought it would be interesting to eventually add functionality for a user profile that tracks exams you have taken and your scores in them. For right now, it just keeps outsiders form stealing our medical knowledge. Have fun!</p>
+  </div>
+  <div class="tab-pane fade" id="planned">
+    <p>Ability to post images and draw on them to make visual examinations</p>
+    <p>Predictive multiple choive, that can populate exams with other user's multiple choice questions.</p>
+  </div>
+
+</div>
 <form action="/" method="post">
     <input class="btn btn-primary" type="submit" name = "practice" value="Practice" />
     <input class="btn btn-primary" type="submit" name = "add" value="Add Questions" />
