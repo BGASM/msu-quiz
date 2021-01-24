@@ -49,6 +49,11 @@ class MCQ(db.Model):
         correct = self.mcq == self.question.answer
         return correct
 
+    def get_answer(self):
+        logger.debug(f'{self.mcq} is {self.question.answer}')
+        correct = self.question.answer
+        return correct
+
     def __repr__(self):
         return f"""<MCQ(ID:{self.id}, Question_id:{self.question_id}, mcq:{self.mcq})>"""
 

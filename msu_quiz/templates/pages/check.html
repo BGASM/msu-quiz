@@ -13,11 +13,15 @@
   {% for index in qlist %}
     <p>{{ index.test_no}}) {{index.question}}</p>
     {% for mcq in index.mcq %}
-      {% if index.answer == False %}
+      {% if index.correct == False %}
           {% if mcq.id == index.choice %}
             <p class="text-danger">{{mcq.mc}}</p>
           {% else %}
-            <p>{{mcq.mc}}</p>
+            {% if mcq.mc == index.answer %}
+                <p class="text-success">{{mcq.mc}}</p>
+            {% else %}
+                <p>{{mcq.mc}}</p>
+            {% endif %}
           {% endif %}
       {% else %}
           {% if mcq.id == index.choice %}

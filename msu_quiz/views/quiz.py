@@ -33,6 +33,7 @@ def check():
             'test_no': item['test_no'],
             'choice': int(item['choice']),
             'answer': item['answer'],
+            'correct': item['correct'],
             'question': db.session.query(Question.question).filter(Question.id == item['question']).first()[0],
             'mcq': mcqs
         }
@@ -109,11 +110,12 @@ def check_exam(sel):
         temp = db.session.query(MCQ).filter_by(id=selected[item]).first()
         returned.append({'test_no': item,
                          'question': session['question_index'][int(item)-1]['QA']['question'],
+                         'answer': temp.get_answer(),
                          'mcq_order': session['question_index'][int(item)-1]['QA']['mcqs'],
                          'choice': selected[item],
-                         'answer': temp.check_answer()})
+                         'correct': temp.check_answer()})
     session['question_index'] = returned
-    print(session['question_index'])
+    logger.critical(session['question_index'])
 
 
 

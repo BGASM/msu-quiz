@@ -11,6 +11,12 @@ class Config(object):
     FLASK_APP = environ.get('FLASK_APP')
     FLASK_ENV = environ.get('FLASK_ENV')
 
+    # AWS
+    S3_BUCKET = environ.get("S3_BUCKET_NAME")
+    S3_KEY = environ.get("AWS_ACCESS_KEY")
+    S3_SECRET = environ.get("AWS_SECRET_ACCESS_KEY")
+    S3_LOCATION = f'http://{S3_BUCKET}.s3.amazonaws.com/'
+
 
     # Static Assets
     STATIC_FOLDER = "static"
