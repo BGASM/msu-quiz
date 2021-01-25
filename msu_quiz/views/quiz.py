@@ -169,10 +169,10 @@ def make_table(title, course, question_answer):
 
 
 def parse_questions(question_answer):
-    regex3 = r"(^(?:\s*(?:\(*[a-eA-E]\)*\.*\s+)))"
+    regex3 = r"(^(?:\s*(?:\(*[a-zA-Z]\)*\.*\s+)))"
     regex4 = r"(^\s*\d+[\.\)\s]\s+)"
     regex5 = r"(^[a-fA-F][\)\.]\s+[\s\S]+)"
-    regex6 = r"(^(?!(^[a-fA-F][\)\.]\s+[\s\S]+)).*)"
+    regex6 = r"(^(?!(^[a-zA-Z][\)\.]\s+[\s\S]+)).*)"
     regex1 = r"(^[\t ]*[0-9]+[\)\.][\t ]+[\s\S]*?(?=^[\n\r]))"
 
     regex = regex1
