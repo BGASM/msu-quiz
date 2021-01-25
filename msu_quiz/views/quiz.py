@@ -114,7 +114,8 @@ def check_exam(sel):
                          'mcq_order': session['question_index'][int(item)-1]['QA']['mcqs'],
                          'choice': selected[item],
                          'correct': temp.check_answer()})
-    session['question_index'] = returned
+    sort_list = sorted(returned, key=lambda i: (int(i['test_no'])))
+    session['question_index'] = sort_list
     logger.critical(session['question_index'])
 
 
