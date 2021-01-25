@@ -168,28 +168,30 @@ def make_table(title, course, question_answer):
 
 
 def parse_questions(question_answer):
-    # t1 = "([\s\S]+?)(?=(^(?:(?:\s+(?:\([A-E]|[A-E]))|(?:\([A-E]|[A-E])).*\n)\n)"
-    regex2 = r"(^\s*\d+(?:.|\)|\s+)(?:[\s\S]+?))((?=^\s*\(*[a-eA-E]\)*).*\n(?:[\s\S]+))"
     regex3 = r"(^(?:\s*(?:\(*[a-eA-E]\)*\.*\s+)))"
     regex4 = r"(^\s*\d+[\.\)\s]\s+)"
-    lead_digit = "(^\s*\d+(?:.|\)|\s+)"
-    any_chars = "(?:[\s\S]+?))"
-    look_ahead = "(?:(?=^\s*\d+((?:[\s\S]+?)))|\Z)"
-    regex = fr'{lead_digit}{any_chars}{look_ahead}'
+    regex5 = r"(^[a-fA-F][\)\.]\s+[\s\S]+)"
+    regex6 = r"(^(?!(^[a-fA-F][\)\.]\s+[\s\S]+)).*)"
+    regex1 = r"(^[\t ]*[0-9]+[\)\.][\t ]+[\s\S]*?(?=^[\n\r]))"
+
+    regex = regex1
     print(question_answer)
 
     matches = re.finditer(regex, question_answer, re.MULTILINE)
     quiz_list = []
     QA = namedtuple('QA', 'question answer')
     for match in matches:
-        mat = re.findall(
-            regex2,
-            match.group(0).lstrip().rstrip(),
-            re.MULTILINE)
-        logger.critical(mat)
-        t_q = " ".join(mat[0][0].splitlines())
-        tmpr = QA(re.sub(regex4, '', t_q),
-                  re.sub(regex3, '', mat[0][1], 0, re.MULTILINE).splitlines())
+        q_a = match.group(0)
+        qt = []
+        questions = re.findall(regex6, q_a, re.MULTILINE)
+        for x in questions:
+            qt.append(x[0])
+        question = " ".join(qt)
+        answers = re.findall(regex5, q_a, re.MULTILINE)
+        answer = " ".join(answers)
+
+        tmpr = QA(re.sub(regex4, '', question),
+                  re.sub(regex3, '', answer, 0, re.MULTILINE).splitlines())
         quiz_list.append(tmpr)
     return quiz_list
 
