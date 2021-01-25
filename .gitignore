@@ -122,4 +122,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-/msu_quiz/.idea/
+/msu_quiz/.idea/*
+
+.idea/
+
+msu_quiz/templates/pages/vision.html
