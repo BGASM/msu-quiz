@@ -4,7 +4,9 @@ from msu_quiz import db
 from flask_login import login_required, current_user
 from flask import Blueprint, redirect, render_template, session
 from flask import request, url_for
-from msu_quiz.utils.forms import AddQuestionForm
+from msu_quiz.utils.mail import send_mail
+from msu_quiz.utils.security import ts
+from msu_quiz.utils.forms import AddQuestionForm, EmailForm, PasswordForm
 from collections import namedtuple
 import re
 from loguru import logger
@@ -17,6 +19,57 @@ quiz_bp = Blueprint(
     template_folder='templates',
     static_folder='static'
 )
+
+
+@quiz_bp.route('/reset/<token>', methods=["GET", "POST"])
+def reset_with_token(token):
+    try:
+        email = ts.loads(token, salt="recover-key", max_age=86400)
+    except:
+        abort(404)
+
+    form = PasswordForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=email).first_or_404()
+
+        user.set_password(form.password.data)
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for('auth.login'))
+
+    return render_template('user/reset_with_token.html', form=form, token=token)
+
+
+@quiz_bp.route('/reset', methods=["GET", "POST"])
+def reset():
+    form = EmailForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first_or_404()
+
+        subject = "Password reset requested"
+
+        # Here we use the URLSafeTimedSerializer we created in `util` at the
+        # beginning of the chapter
+        token = ts.dumps(user.email, salt='recover-key')
+
+        recover_url = url_for(
+            'quiz.reset_with_token',
+            token=token,
+            _external=True)
+
+        html = render_template(
+            'email/recover.html',
+            recover_url=recover_url)
+
+        # Let's assume that send_email was defined in myapp/util.py
+        send_mail(user.email, subject, html)
+
+        return redirect(url_for('quiz.index'))
+    return render_template('user/reset.html', form=form)
+
 
 @quiz_bp.route('/check', methods=['GET', 'POST'])
 @login_required

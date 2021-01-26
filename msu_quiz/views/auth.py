@@ -46,10 +46,13 @@ def register():
 @auth_bp.route("/login", methods=("GET", "POST"))
 def login():
     """Log in a registered user by adding the user id to the session."""
+    logger.critical('In login.')
     if current_user.is_authenticated:
+        logger.critical('In authenicated.')
         return redirect(url_for('quiz.index'))
 
     form = LoginForm()
+    logger.critical(form)
     # Validate login attempt
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -59,6 +62,7 @@ def login():
             return redirect(next_page or url_for('quiz.index'))
         flash('Invalid username/password combination')
         return redirect(url_for('auth.login'))
+    logger.critical('About to return.')
     return render_template("user/login.html", form=form)
 
 
