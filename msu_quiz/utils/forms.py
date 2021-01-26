@@ -40,6 +40,7 @@ class SignupForm(FlaskForm):
         validators=[
             Optional(),
             Length(min=6),
+            DataRequired(),
             Email(message='Enter a valid email.')]
     )
     password = PasswordField(

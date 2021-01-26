@@ -39,7 +39,6 @@ def register():
             db.session.commit()
             login_user(user)
             return redirect(url_for('quiz.index'))
-        flash('A user with that email address already exists', 'error')
     return render_template('user/register.html', form=form)
 
 
