@@ -57,6 +57,7 @@ def login():
         if user and user.check_password(password=form.password.data):
             login_user(user)
             next_page = request.args.get('next')
+            flash('You have successfully logged in!')
             return redirect(next_page or url_for('quiz.index'))
         flash('Invalid username/password combination')
         return redirect(url_for('auth.login'))

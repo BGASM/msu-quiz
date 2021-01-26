@@ -88,7 +88,6 @@ class User(db.Model, UserMixin):
         """
         self._password = bcrypt.generate_password_hash(plaintext.encode('utf8')).decode('utf8')
 
-
     def check_password(self, password):
         """ First checks if user has old SHA256 password. If a SHA256 pw returns as anything besides
         null, then we check if the password was valid. If it is valid we convert the plaintext into
@@ -103,6 +102,8 @@ class User(db.Model, UserMixin):
                 db.session.add(self)
                 db.session.commit()
                 logger.critical('Old style password replaced.')
+            else:
+                return False
         return bcrypt.check_password_hash(self._password.encode('utf8'), password.encode('utf8'))
 
     def __repr__(self):
