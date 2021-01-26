@@ -29,6 +29,7 @@ class Config(object):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    SENDGRID_API_KEY = environ['SG_API']
 
 class ProductionConfig(Config):
     DEBUG = False

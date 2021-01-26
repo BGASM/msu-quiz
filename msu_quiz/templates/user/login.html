@@ -2,7 +2,7 @@
 {% block title %}Signup{% endblock %}
 {% block head %}{{ super() }}{% endblock %}}
 
-{% block page_header %}Signup - MSUCOM Class of 2024 Qbank{% endblock %}
+{% block page_header %}Login - MSUCOM Class of 2024 Qbank{% endblock %}
 {% block page_header_p %}{% endblock %}
 
 {% block content %}
@@ -39,7 +39,10 @@
         <span>Don't have an account?</span>
         <a href="{{ url_for('auth.register') }}">Sign up.</a>
       </div>
-
+    <div class="rest-password">
+        <span>Forgot your password?</span>
+        <a href="{{ url_for('quiz.reset') }}">Click here!</a>
+      </div>
     </form>
 
 {% endblock %}

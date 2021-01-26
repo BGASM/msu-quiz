@@ -1,0 +1,16 @@
+{# ourapp/templates/reset.html #}
+
+{% extends "layout.html" %}
+{% block title %}Reset Password{% endblock %}
+{% block head %}{{ super() }}{% endblock %}}
+
+{% block page_header %}Password Reset - MSUCOM Class of 2024 Qbank{% endblock %}
+{% block page_header_p %}Enter your email and a reset link will be sent shortly.{% endblock %}
+{% block content %}
+<form action="{{ url_for('quiz.reset') }}" method="POST">
+    {{ form.email.label(class="col-form-label") }}:
+    {{ form.email(class="form-control", placeholder='youremail@example.com') }}<br>
+    {{ form.csrf_token }}
+    <input type="submit" value="Change my password" />
+</form>
+{% endblock %}
