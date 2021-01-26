@@ -34,7 +34,7 @@ def register():
                         name=form.name.data,
                         username=form.username.data,
                         active=True)
-            user.set_password(form.password.data)
+            user.passwd = form.password.data
             db.session.add(user)
             db.session.commit()
             login_user(user)
@@ -51,7 +51,6 @@ def login():
         return redirect(url_for('quiz.index'))
 
     form = LoginForm()
-    logger.critical(form)
     # Validate login attempt
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()

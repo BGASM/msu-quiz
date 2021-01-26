@@ -28,7 +28,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = environ['DATABASE_URL']
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+    BCRYPT_LOG_ROUNDS = 12
     SENDGRID_API_KEY = environ['SG_API']
 
 class ProductionConfig(Config):

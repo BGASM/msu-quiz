@@ -1,7 +1,10 @@
+from os import urandom
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.hybrid import hybrid_property
 from msu_quiz import db
 from flask_login import UserMixin
 from loguru import logger
+from msu_quiz import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -66,17 +69,41 @@ class User(db.Model, UserMixin):
     # User authentication information. The collation='NOCASE' is required
     # to search case insensitively when USER_IFIND_MODE is 'nocase_collation'.
     username = db.Column(db.String(100), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=True)
 
     # User information
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(255), nullable=True, unique=True)
 
-    def set_password(self, password):
-        self.password = generate_password_hash(password, method='sha256')
+    _password = db.Column(db.String(255), nullable=True)
+
+    @hybrid_property
+    def passwd(self):
+        return self._password
+
+    @passwd.setter
+    def passwd(self, plaintext):
+        """ Takes the plaintext and encodes it into unicode, hashes a PW, then passes the
+        decoded hash to database.
+        """
+        self._password = bcrypt.generate_password_hash(plaintext.encode('utf8')).decode('utf8')
+
 
     def check_password(self, password):
-        return check_password_hash(self.password, password)
+        """ First checks if user has old SHA256 password. If a SHA256 pw returns as anything besides
+        null, then we check if the password was valid. If it is valid we convert the plaintext into
+        bcrypt PW, remove the old password, and commit the user to DB. Then we allow the Bcrypt
+        pw hash comparison.
+        """
+        if self.password is not None:
+            logger.critical('Old style password exists.')
+            if check_password_hash(self.password, password):
+                self.passwd = password
+                self.password = None
+                db.session.add(self)
+                db.session.commit()
+                logger.critical('Old style password replaced.')
+        return bcrypt.check_password_hash(self._password.encode('utf8'), password.encode('utf8'))
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
