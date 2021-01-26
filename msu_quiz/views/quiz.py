@@ -110,11 +110,6 @@ def question_return():
 
 @quiz_bp.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        if "practice" in request.form:
-            return redirect(url_for('quiz.quiz'))
-        elif "add" in request.form:
-            return redirect(url_for('quiz.add_question'))
     return render_template('pages/index.html')
 
 

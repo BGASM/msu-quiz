@@ -16,10 +16,14 @@
   <li class="nav-item">
     <a class="nav-link" data-toggle="tab" href="#planned">Planned Features</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#update">Updates</a>
+  </li>
 </ul>
 <div id="myTabContent" class="tab-content">
   <div class="tab-pane fade show active" id="home">
-    <p>This is a repository for practice exams made by peers. Please register in order to view and add your own exams. It is just a formality, I thought it would be interesting to eventually add functionality for a user profile that tracks exams you have taken and your scores in them. For right now, it just keeps outsiders form stealing our medical knowledge. Have fun!</p>
+    <p>This is a repository for practice exams made by peers. Please register in order to view and add your own exams. It is just a formality, I thought it would be interesting to eventually add functionality for a user profile that tracks exams you have taken and your scores in them. For right now, it just keeps outsiders form stealing our medical knowledge.Have fun!</p>
+    <p>If you encounter bugs, </p>
   </div>
   <div class="tab-pane fade" id="planned">
     <p>Ability to post images and draw on them to make visual examinations</p>
@@ -29,10 +33,16 @@
     <p>Ranking system for the exams you like, and the exams you hate.</p>
     <p>OAUTH with MSU login.</p>
   </div>
+    <div class="tab-pane fade" id="update">
+    <p>Changed password storage to a more secure variant. Login times will be a bit longer, which is good.</p>
+    <p>Fixed some regex on quiz adding that should parse input better.</p>
+    <p>Password reset and automailer functionality live.</p>
+    <p>Added message flashing.</p>
+    <p>Fixed some bugs that were causing internal errors with database mismatches.</p>
+    <p>Added a tip jar.</p>
+
+  </div>
 
 </div>
-<form action="/" method="post">
-    <input class="btn btn-primary" type="submit" name = "practice" value="Practice" />
-    <input class="btn btn-primary" type="submit" name = "add" value="Add Questions" />
-</form>
 {% endblock %}
+<script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="beargasm" data-description="Support me on Buy me a coffee!" data-message="Thank you for visiting. If you are finding this site useful, feel free to buy me a coffee!" data-color="#40DCA5" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
