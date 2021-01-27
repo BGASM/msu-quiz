@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js"></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css" integrity="sha384-8iuq0iaMHpnH2vSyvZMSIqQuUnQA7QM+f6srIdlgBrTSEyd//AWNMyEaSF2yPzNQ" crossorigin="anonymous">
     <title>Practice Quiz - MSU Class 2024 Qbank</title>
@@ -191,6 +192,8 @@
                     var id = document.getElementById(q_no);
                     document.getElementById("submitbutton").hidden = true;
                     get_question(id.dataset.test_no);
+                } else if (q_no == max_q_no) {
+                    document.getElementById("submitbutton").hidden = false;
                 }
                 event.handled = true;
             }
