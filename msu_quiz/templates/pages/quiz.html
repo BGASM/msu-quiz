@@ -51,37 +51,33 @@ function return_data(table) {
 <p>Pick a quiz to try.</p>
 {% endblock %}
 {% block content %}
-<div class="bs-docs-section">
-    <div class="row">
-        <div class="col-xl-6">
-                <div class="d-flex justify-content-center">
-                    <table id="quizTable" class="table table-striped table-bordered table" style="display:inline-table" cellspacing="0" width="100%">
-                            <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Course</th>
-                                        <th>Questions</th>
-                                        <th>Creator</th>
-                                        <th>Ranking</th>
-                                        <th>Quiz ID</th>
-                                    </tr>
-                            </thead>
-                            <tbody>
-                                {% for row in rows %}
-                                <tr>
-                                    <td>{{ row.title }}</td>
-                                    <td>{{ row.course }}</td>
-                                    <td>{{ row.no_questions }}</td>
-                                    <td>{{ row.user }}</td>
-                                    <td>{{ row.ranking }}</td>
-                                    <td>{{ row.id }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                    </table>
-                </div>
+<div class="container d-flex justify-content-center" >
+        <div class="bs-docs-section">
+          <table id="quizTable" class="table table-striped table-bordered table" style="display:inline-table" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Course</th>
+                <th>Questions</th>
+                <th>Creator</th>
+                <th>Ranking</th>
+                <th>Quiz ID</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row.title }}</td>
+                    <td>{{ row.course }}</td>
+                    <td>{{ row.no_questions }}</td>
+                    <td>{{ row.user }}</td>
+                    <td>{{ row.ranking }}</td>
+                    <td>{{ row.id }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+          </table>
         </div>
-    </div>
 </div>
 {% endblock %}
 

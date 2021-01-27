@@ -94,6 +94,7 @@ class User(db.Model, UserMixin):
         bcrypt PW, remove the old password, and commit the user to DB. Then we allow the Bcrypt
         pw hash comparison.
         """
+        check = False
         if self.password is not None:
             logger.critical('Old style password exists.')
             if check_password_hash(self.password, password):
@@ -103,8 +104,13 @@ class User(db.Model, UserMixin):
                 db.session.commit()
                 logger.critical('Old style password replaced.')
             else:
-                return False
-        return bcrypt.check_password_hash(self._password.encode('utf8'), password.encode('utf8'))
+                return check
+        try:
+            check = bcrypt.check_password_hash(self._password.encode('utf8'), password.encode('utf8'))
+        except:
+            logger.critical('Error in password check.')
+        finally:
+            return check
 
     def __repr__(self):
         return '<User {}>'.format(self.username)

@@ -27,24 +27,15 @@ $(document).ready(function () {
 {% endblock %}}
 
 {% block page_header %}Input Qbank{% endblock %}
-{% block page_header_p %}
-<p>Enter all questions and answers in a single document.</p>
-<p>My script can parse a few different styles of input, but the following default is best, and will avoid errors:</p>
-<p>1. This is a question, it can be as long as you like, or as short. It starts with a number and a period, but a paraentheses would have been fine too.</p>
-<p>A) This is a multiple choice option.</p>
-<p>B. This is also a multiple choice option.</p>
-<p>(C) Wow! Me too!</p>
-<p>D I might work too, but I can also be a little tricky.</p>
-<br>
-<p></p>2) You notice I put a blank line between questions. This is important. It is how my script will tell where one question's multiple choice ends, and the next question begins.</p>
-<p></p>A) Oh, you'll also notice I switched up the format for my question index!</p>
-<p>B. Numbers dont have to be sequential, they just tell my script where to look.</p>
-<p>c. OH! I should have mentioned this earlier, but - your CORRECT answer needs to be FIRST.</p>
-<p>(D) Don't worry though, my script randomizes all of the questions AND all of the multiple choice options every time you run the script.</p>
-<p>E) So you can run the same exam multiple times without memorizing the answer position.</p>
-<p>E. You may have also noticed I'm adding a lot of multiple choices, you can add as many as you want!</p>
-{% endblock %}
 {% block content %}
+        <p class="text-success">
+          Enter all questions and answers in a single document. <br> Put a number, followed by a . or ) and space before each question. The numbers do not have to be in any order, and can repeat. <br> After the end of the question, a single enter.</p>
+        <p class="text-danger"> The first multiple choice must be the answer!</p>
+        <p class="text-success">
+          Each multiple choice needs to start with a letter, followed by a . or ) followed by at least one space or tab. You can use the same MCQ letter multiple times, they have no function besides letting my script know it is still looking at MCQ's and not the next question. <br>
+          <br> Questions can be as long as you want. You can also have as many multiple choices as you want. <br> Because of the way my script parses your input, you cannot use multiple choice in the form of "Both A and B". Your input will have all numbers and MCQ letters scrubbed off so that choices can be randomized. <br>
+          <br> There is an example in the quiz entry form. </p>
+<div class="container">
 <form method="POST" action="/add_question">
       {{ form.csrf_token }}
 
@@ -110,5 +101,6 @@ e. The right pupil normal, the left constricted") }}
         {{ form.submit(class="btn btn-primary") }}
       </div>
 </form>
+</div>
 {% endblock %}
 

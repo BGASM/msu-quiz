@@ -51,19 +51,17 @@
       </nav>
    </header>
    <!-- Begin page content -->
-   <main role="main" class="flex-shrink-0">
-      <div class="container">
+   <main role="main">
+      <div class="d-flex flex-column align-items-center flex-grow-1 container-fluid min-vh-100 justify-content-start" >
          <h3 class="mt-5">{% block page_header %}{% endblock %}</h3>
          <p class="lead">{% block page_header_p %}{% endblock %}</p>
          <div class="container">{% block content %}{% endblock %}</div>
-         <br>
-
       </div>
    </main>
-   <footer class="bd-footer mt-auto py-3">
-      <div class="container">
+  <footer class="bd-footer">
+    <div class="container-fluid" >
          <span class="text-muted">&copy; Copyright 2021 by BGASM.</span>
-      </div>
+    </div>
    </footer>
 </body>
 </html>
