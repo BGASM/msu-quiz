@@ -167,7 +167,7 @@
           });
         })
 
-        $(document).on('swiperight', function(event){
+        $(window).on('swiperight', function(event){
             if(event.handled !== true) // This will prevent event triggering more then once
             {
                 if (q_no < max_q_no) {
@@ -183,7 +183,7 @@
             return false;
         });
 
-        $(document).on('swipeleft', function(event){
+        $(window).on('swipeleft', function(event){
             if(event.handled !== true) // This will prevent event triggering more then once
             {
                 if (q_no > 1){
