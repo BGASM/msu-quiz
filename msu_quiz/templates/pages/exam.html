@@ -1,6 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends "global.html" %}
+{% block start %}
+<title>Exam - MSU Class 2024 Qbank</title>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -18,8 +29,8 @@
         $('#startModal').modal('show');
     });
 </script>
-</head>
-
+{% endblock start %}}
+{% block continue %}
   <body class="d-flex flex-column min-vh-100">
     <div class ="modal" id="startModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -226,4 +237,4 @@
     </script>
 
   </body>
-</html>
+{% endblock continue %}

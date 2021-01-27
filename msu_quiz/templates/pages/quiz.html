@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Qbank{% endblock %}
+{% block title %}Qbank{% endblock title %}
 {% block head %}{{ super() }}
 <script type="text/javascript">
     $(document).ready(function() {
@@ -48,7 +48,8 @@ function return_data(table) {
   });
 }
 </script>
-{% endblock %}
+{% endblock head %}
+
 {% block page_header %}Qbank{% endblock %}
 {% block page_header_p %}
 <p>Pick a quiz to try.</p>
