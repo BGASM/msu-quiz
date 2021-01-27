@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/2.0.3/jquery.mobile-events.min.js"></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css" integrity="sha384-8iuq0iaMHpnH2vSyvZMSIqQuUnQA7QM+f6srIdlgBrTSEyd//AWNMyEaSF2yPzNQ" crossorigin="anonymous">
     <title>Practice Quiz - MSU Class 2024 Qbank</title>
@@ -167,42 +167,15 @@
                 }
           });
         })
-
-        $(window).on('swiperight', function(event){
-            if(event.handled !== true) // This will prevent event triggering more then once
-            {
-                if (q_no < max_q_no) {
-                    q_no++;
-                    var id = document.getElementById(q_no);
-                    document.getElementById("submitbutton").hidden = true;
-                    get_question(id.dataset.test_no);
-                } else if (q_no == max_q_no) {
-                    document.getElementById("submitbutton").hidden = false;
-                }
-                event.handled = true;
+        $(function() {
+            if (jQuery.isTouchCapable() == true) {
+            $('body').on('swipeleft', function(e) { next_page('Previous'); })
+                     .on('swiperight', function(e) { next_page('Next'); })
             }
-            return false;
         });
 
-        $(window).on('swipeleft', function(event){
-            if(event.handled !== true) // This will prevent event triggering more then once
-            {
-                if (q_no > 1){
-                    q_no--;
-                    var id = document.getElementById(q_no);
-                    document.getElementById("submitbutton").hidden = true;
-                    get_question(id.dataset.test_no);
-                } else if (q_no == max_q_no) {
-                    document.getElementById("submitbutton").hidden = false;
-                }
-                event.handled = true;
-            }
-            return false;
-        });
-
-        $('body').on('click', '.btn-group button', function(e){
-            var btn_sel = $(this).val()
-            console.log(btn_sel)
+        function next_page( btn_sel )
+        {
             if (btn_sel == 'Next'){
                 if (q_no < max_q_no) {
                     q_no++;
@@ -222,6 +195,34 @@
             } else if (btn_sel == 'Flag'){
                 alert(btn_sel)
             }
+        }
+
+
+        $(function () {
+            $(document).on('swipeleft', function (e) {
+                if (q_no > 1) {
+                    q_no--;
+                    var id = document.getElementById(q_no);
+                    document.getElementById("submitbutton").hidden = true;
+                    get_question(id.dataset.test_no);
+                }
+            })
+                .on('swiperight', function (e) {
+                    if (q_no < 1) {
+                        q_no++;
+                        var id = document.getElementById(q_no);
+                        document.getElementById("submitbutton").hidden = true;
+                        get_question(id.dataset.test_no);
+                    } else if (q_no == max_q_no) {
+                        document.getElementById("submitbutton").hidden = false;
+                    }
+                })
+        });
+
+        $('body').on('click', '.btn-group button', function(e){
+            var btn_sel = $(this).val()
+            console.log(btn_sel)
+            next_page(btn_sel)
         });
 
         function get_question(test_no) {
