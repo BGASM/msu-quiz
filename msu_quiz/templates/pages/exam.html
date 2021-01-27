@@ -169,8 +169,19 @@
         })
         $(function() {
             if (jQuery.isTouchCapable() == true) {
-            $('body').on('swipeleft', function(e) { next_page('Previous'); })
-                     .on('swiperight', function(e) { next_page('Next'); })
+            $('body').on('swipeleft', function(e) {
+                            if($(this).hasClass('active')) {
+                                    next_page('Previous');
+                                    swipeFlag = false;
+                                }
+                    })
+                     .on('swiperight', function(e) {
+                         if($(this).hasClass('active')) {
+                                    next_page('Next');
+                                    swipeFlag = false;
+                                }
+                    })
+
             }
         });
 
