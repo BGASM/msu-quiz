@@ -8,6 +8,14 @@
         "visible": false,
         "targets": 5
       }],
+      responsive: {
+        breakpoints: [
+            { name: 'desktop', width: Infinity },
+            { name: 'tablet',  width: 1024 },
+            { name: 'fablet',  width: 768 },
+            { name: 'phone',   width: 480 }
+        ]
+        },
       select: {
         style: 'multi'
       },
@@ -21,6 +29,8 @@
         }
       }]
     });
+
+
 });
 
 function return_data(table) {
