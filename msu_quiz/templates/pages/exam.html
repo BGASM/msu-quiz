@@ -86,8 +86,8 @@
   </header>
 
   <main role="main">
-    <div class="d-flex">
-      <div class="card text-white bg-primary mr-auto flex-shrink-1 text-center">
+    <div class="d-flex min-vh-100" >
+      <div class="card text-white bg-primary mr-auto flex-shrink-1 text-center d-none d-md-block">
         <div class="card-header text-center text-uppercase p-0">Q #</div>
             <div class="card-body m-0 p-0">
                  <ul class="navbar-nav " id="question_list">
@@ -169,8 +169,8 @@
         })
         $(function() {
             if (jQuery.isTouchCapable() == true) {
-            $('body').on('swipeleft', function(e) { next_page('Previous'); })
-                     .on('swiperight', function(e) { next_page('Next'); })
+            $('body').on('swipeleft', function(e) { next_page('Next'); })
+                     .on('swiperight', function(e) { next_page('Previous'); })
             }
         });
 
@@ -196,28 +196,6 @@
                 alert(btn_sel)
             }
         }
-
-
-        $(function () {
-            $(document).on('swipeleft', function (e) {
-                if (q_no > 1) {
-                    q_no--;
-                    var id = document.getElementById(q_no);
-                    document.getElementById("submitbutton").hidden = true;
-                    get_question(id.dataset.test_no);
-                }
-            })
-                .on('swiperight', function (e) {
-                    if (q_no < 1) {
-                        q_no++;
-                        var id = document.getElementById(q_no);
-                        document.getElementById("submitbutton").hidden = true;
-                        get_question(id.dataset.test_no);
-                    } else if (q_no == max_q_no) {
-                        document.getElementById("submitbutton").hidden = false;
-                    }
-                })
-        });
 
         $('body').on('click', '.btn-group button', function(e){
             var btn_sel = $(this).val()

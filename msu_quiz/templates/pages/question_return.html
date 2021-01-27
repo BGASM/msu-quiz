@@ -3,13 +3,12 @@
   <p class="lead">{{ question }}</p>
     <hr class="my-4">
     <form>
-        <div class="form-group" id="mcq_group" data-mcq_no="{{ test_no }}">
+         <div class="form-group list-group" id="mcq_group" data-mcq_no="{{ test_no }}">
             {% for mc in mcqs %}
                 <div class="form-check">
-                    <label class="form-check-label" data-children-count="1">
-                      <input type="radio" class="form-check-input" name="mcq" id="{{ test_no }}{{ mc[0] }}" value="{{ mc[0] }}">
+                      <a href="#" class="list-group-item list-group-item-action" aria-current="false" name="mcq" id="{{ test_no }}{{ mc[0] }}" data-value="{{ mc[0] }}">
                         {{ mc[1] }}
-                    </label>
+                      </a>
                 </div>
             {% endfor %}
         </div>
@@ -22,21 +21,40 @@
         console.log(sessionStorage);
         if(sessionStorage.getItem("{{test_no}}") != undefined){
             console.log(sessionStorage.getItem("{{test_no}}"))
-            var ansselvalue = sessionStorage.getItem("{{test_no}}");
-            $("input[name='mcq'][value='"+ ansselvalue +"']").attr('checked', 'checked')
+            var tno={{test_no}}
+            var ano=sessionStorage.getItem("{{test_no}}")
+            var ansselvalue = ""+tno+""+ano
+            console.log(ansselvalue)
+            var mc = document.getElementById(ansselvalue)
+            console.log(mc.id)
+            mc.classList.add("active");
+            mc.classList.add("list-group-item-info");
+            mc.setAttribute('aria-current', true)
         };
     })
 
-    mcqs = document.getElementsByName("mcq");
-    for (var i = 0 ; i < mcqs.length; i++) {
-        mcqs[i].addEventListener("change", load_local);
-    }
+    $(".list-group-item").click(function(){
+        var listItems = $(".list-group-item");
 
-    function load_local() {
+                // Remove 'active' tag for all list items
+                for (let i = 0; i < listItems.length; i++) {
+                    listItems[i].classList.remove("active");
+                    listItems[i].classList.remove("list-group-item-info");
+                    listItems[i].setAttribute('aria-current', true)
+                }
+
+                // Add 'active' tag for currently selected item
+                this.classList.add("active");
+                this.classList.add("list-group-item-info");
+                this.setAttribute('aria-current', true)
+                load_local(this)
+    })
+
+    function load_local(mcq) {
             console.log("Setting local storage.")
             var mcq_no = document.getElementById("mcq_group").dataset.mcq_no;
-            var mc_sel = document.querySelector('input[name="mcq"]:checked').value;
-            console.log(mcq_no, mc_sel)
+            var mc_sel = mcq.dataset.value;
+            console.log(""+mcq_no+""+ mc_sel)
             sessionStorage.setItem(""+mcq_no, mc_sel);
         }
 </script>
