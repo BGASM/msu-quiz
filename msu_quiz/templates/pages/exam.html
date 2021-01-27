@@ -19,7 +19,7 @@
 </script>
 </head>
 
-  <body>
+  <body class="d-flex flex-column min-vh-100">
     <div class ="modal" id="startModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -56,37 +56,45 @@
       </div>
     </div>
 
-    <div class="main d-flex flex-column min-vh-100">
-        <div class="navbar navbar-expand-sm sticky-top navbar-dark bg-primary" style>
-          <div class="container">
-              <a class="navbar-brand" href="{{ url_for('quiz.index') }}">MSU Class 2024 Qbank</a>
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('quiz.quiz') }}">Practice</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('quiz.add_question') }}">Add Quiz</a>
-                  </li>
-                </ul>
-              </div>
-          </div>
-        </div>
+    <header>
+    <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-primary" style="">
+      <a class="navbar-brand" href="{{ url_for('quiz.index') }}">MSU Class 2024 Qbank</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('quiz.quiz') }}">Practice</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('quiz.add_question') }}">Add Quiz</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a>
+              <a class="dropdown-item" href="{{ url_for('auth.register') }}">Register</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
 
-	<div class="d-flex flex-row">
-		<div class="nav">
-				<div class="card text-white bg-primary mb-3">
-                <div class="card-header">Questions</div>
-                <div class="card-body">
-                <ul class="navbar-nav " id="question_list">
+  <main role="main">
+    <div class="d-flex">
+      <div class="card text-white bg-primary mr-auto flex-shrink-1 text-center">
+        <div class="card-header text-center text-uppercase p-0">Q #</div>
+            <div class="card-body m-0 p-0">
+                 <ul class="navbar-nav " id="question_list">
                     {% for index in qlist %}
                     <li>
                         <button
                             type="button"
-                            class="btn btn-link"
+                            class="btn btn-link btn-sm"
                             id="{{ index.test_no }}"
                             data-test_no="{{ index.test_no }}">
                             {{ index.test_no }}
@@ -94,11 +102,11 @@
                     </li>
                     {% endfor %}
                 </ul>
-              </div>
             </div>
         </div>
-        <div class="p-2 flex-grow-1 align-self-stretch">
-            <div id="question_placement" style="max-width: 980px;"></div>
+        <div class="d-flex flex-grow-1 container-fluid m-0 p-0" >
+        <div class="p-2 flex-grow-1 align-self-stretch mr-auto">
+          <div id="question_placement" style="max-width: 980px;"></div>
 
             <div class="btn-group" role="group" id="btn-group" hidden>
                 <button class="btn btn-primary" type="button" value="Previous">
@@ -125,7 +133,13 @@
         </div>
         </div>
       </div>
+    </main>
+
+    <footer class="bd-footer">
+    <div class="container-fluid">
+      <span class="text-muted">© Copyright 2021 by BGASM.</span>
     </div>
+  </footer>
     <script type="text/javascript">
         var q_no = 1;
         var max_q_no = document.getElementById("question_list").getElementsByTagName("li").length
