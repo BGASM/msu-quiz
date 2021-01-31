@@ -2,15 +2,16 @@ from msu_quiz.models.models import MCQ, Question, Quiz, User
 from sortedcontainers.sorteddict import SortedDict
 from msu_quiz import db
 from flask_login import login_required, current_user
-from flask import Blueprint, redirect, render_template, session
-from flask import request, url_for
+from flask import Blueprint, redirect, render_template, session, flash, request, url_for
 from msu_quiz.utils.mail import send_mail
 from msu_quiz.utils.security import ts
+from msu_quiz.utils.add_quiz import add_quiz
 from msu_quiz.utils.forms import AddQuestionForm, EmailForm, PasswordForm
 from collections import namedtuple
 import re
 from loguru import logger
 import random as rand
+from pprint import pprint
 import json
 
 
@@ -142,10 +143,8 @@ def quiz():
 @login_required
 def add_question():
     form = AddQuestionForm()
-    # Validate login attempt
-    if form.validate_on_submit():
-        make_table(form.quiz.data, form.course.data, form.question.data)
-        return redirect(url_for('quiz.index'))
+    if request.method == 'POST':
+        return add_quiz(form=form, user=current_user.name)
     return render_template('pages/add_question.html', form=form)
 
 
@@ -167,7 +166,6 @@ def check_exam(sel):
     logger.critical(session['question_index'])
 
 
-
 def make_exam(quiz_id_list):
     question_index = []
     exam_list = []
@@ -183,65 +181,4 @@ def make_exam(quiz_id_list):
         exam_list.append({'test_no': index, 'QA': value})
     logger.debug(exam_list)
     session['question_index'] = exam_list
-
-
-def make_table(title, course, question_answer):
-    # question_answer has three defs. quiz: <>, course: <>, question: <>
-    # parse_questions returns namedtuple (str).question and [].answer
-    user = current_user.name
-    questions = parse_questions(question_answer)
-    quiz = Quiz(title=title,
-                course=course,
-                user=user,
-                no_questions=len(questions),
-                ranking=0)
-    for q in questions:
-        logger.debug(q)
-        question = None
-        question = Question(question=q.question,
-                            answer=q.answer[0],
-                            course=course)
-        for a in q.answer:
-            logger.debug(a)
-            question.mcqs.append(MCQ(mcq=a))
-        quiz.questions.append(question)
-    print(quiz)
-    try:
-        db.session.add(quiz)
-        db.session.commit()
-    except:
-        db.session.rollback()
-        raise
-    finally:
-        db.session.close()
-
-
-def parse_questions(question_answer):
-    regex3 = r"(^(?:\s*(?:\(*[a-zA-Z]\)*\.*\s+)))"
-    regex4 = r"(^\s*\d+[\.\)\s]\s+)"
-    regex5 = r"(^[a-fA-F][\)\.]\s+[\s\S]+)"
-    regex6 = r"(^(?!(^[a-zA-Z][\)\.]\s+[\s\S]+)).*)"
-    regex1 = r"(^[\t ]*[0-9]+[\)\.][\t ]+[\s\S]*?(?=^[\n\r]))"
-
-    regex = regex1
-    print(question_answer)
-
-    matches = re.finditer(regex, question_answer, re.MULTILINE)
-    quiz_list = []
-    QA = namedtuple('QA', 'question answer')
-    for match in matches:
-        q_a = match.group(0)
-        qt = []
-        questions = re.findall(regex6, q_a, re.MULTILINE)
-        for x in questions:
-            qt.append(x[0])
-        question = " ".join(qt)
-        answers = re.findall(regex5, q_a, re.MULTILINE)
-        answer = " ".join(answers)
-
-        tmpr = QA(re.sub(regex4, '', question),
-                  re.sub(regex3, '', answer, 0, re.MULTILINE).splitlines())
-        quiz_list.append(tmpr)
-    return quiz_list
-
 

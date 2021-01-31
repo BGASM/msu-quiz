@@ -7,6 +7,8 @@ from loguru import logger
 from msu_quiz import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field, fields
+
 
 class Quiz(db.Model):
     __tablename__ = 'quiz'
@@ -16,9 +18,13 @@ class Quiz(db.Model):
     course = db.Column(db.String(), nullable=False)
     no_questions = db.Column(db.Integer, nullable=False)
     user = db.Column(db.String(), nullable=False)
-    ranking = db.Column(db.Integer, nullable=False)
+    ranking = db.Column(db.Integer, nullable=False, default=0)
     questions = relationship("Question", backref="quiz", cascade="all, delete",
                              passive_deletes=True)
+
+    def add_self(self):
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return f"""<Quiz(ID: {self.id}, Title:{self.title}, Course:{self.course}, User:{self.user},
@@ -32,12 +38,14 @@ class Question(db.Model):
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id', ondelete="CASCADE"))
     question = db.Column(db.String(), nullable=False)
     answer = db.Column(db.String(), nullable=False)
-    course = db.Column(db.String(), nullable=False)
+    #course = db.Column(db.String(), nullable=False)
     mcqs = relationship("MCQ", backref="question", cascade="all, delete", passive_deletes=True)
+
+
 
     def __repr__(self):
         return f"""<Questions(ID:{self.id}, Quiz_id:{self.quiz_id}, Question:{self.question},
-            Answer:{self.answer}, Course:{self.course})>"""
+            Answer:{self.answer})>"""
 
 
 class MCQ(db.Model):
@@ -114,3 +122,32 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+
+class MCQSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = MCQ
+        include_fk = True
+        load_instance = True
+        sqla_session = db.session
+
+
+class QuestionSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Question
+        include_relationships = True
+        include_fk = True
+        load_instance = True
+        sqla_session = db.session
+
+    mcqs = fields.Nested(MCQSchema, many=True)
+
+
+class QuizSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Quiz
+        include_relationships = True
+        load_instance = True
+        sqla_session = db.session
+
+    questions = fields.Nested(QuestionSchema, many=True)
