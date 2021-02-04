@@ -130,6 +130,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=True, unique=True)
 
     _password = db.Column(db.String(255), nullable=True)
+    last_on = db.Column(db.DateTime(timezone=True))
     created_on = db.Column(db.DateTime(timezone=True), default=db.func.now())
 
     exams = relationship("Exam", backref="user", cascade="all, delete",
@@ -169,6 +170,11 @@ class User(db.Model, UserMixin):
             logger.critical('Error in password check.')
         finally:
             return check
+
+    def update_last_on(self):
+        self.last_on = db.func.now()
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return '<User {}>'.format(self.username)

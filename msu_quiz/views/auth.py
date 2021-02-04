@@ -47,15 +47,14 @@ def login():
     """Log in a registered user by adding the user id to the session."""
     logger.critical('In login.')
     if current_user.is_authenticated:
-        logger.critical('In authenicated.')
         return redirect(url_for('quiz.index'))
-
     form = LoginForm()
     # Validate login attempt
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.check_password(password=form.password.data):
             login_user(user)
+            user.update_last_on()
             next_page = request.args.get('next')
             flash('You have successfully logged in!')
             return redirect(next_page or url_for('quiz.index'))

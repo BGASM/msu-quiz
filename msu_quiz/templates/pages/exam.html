@@ -17,7 +17,7 @@
     <meta name="description" content="">
     <meta name="author" content="BGASM">
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.prod.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/2.0.3/jquery.mobile-events.min.js"></script>
@@ -100,7 +100,7 @@
   </header>
         <main role="main">
         <div class="d-flex min-vh-100" >
-        <div class="card text-white bg-primary mr-auto flex-shrink-1 text-center d-none d-md-block">
+        <div class="card text-white bg-primary flex-shrink-1 text-center d-none d-md-block">
             <div class="card-header text-center text-uppercase p-0">Q #</div>
             <div class="card-body m-0 p-0">
                 <ul id="question_list" class="navbar-nav" >
@@ -110,8 +110,8 @@
                 </ul>
             </div>
         </div>
-        <div class="d-flex flex-column flex-grow-1 container-fluid m-0 p-0" >
-
+        <div class="d-flex justify-content-sm-center justify-content-md-start container m-0 p-0" >
+        <div class="d-flex-column p-0 flex-grow-1 justify-content-sm-center justify-content-md-start align-self-stretch mr-auto">
             <div class="jumbotron d-flex flex-column" id="test_question" style="padding-bottom: 10px; padding-top: 20px;">
                 <div id="question_placement" style="max-width: 980px;">
                     <question-return
@@ -125,6 +125,7 @@
                         ></question-return>
                 </div>
             </div>
+
                 <quiznavigation @ahead="ahead" @behind="behind" @submit="submit" @flashahead="flashahead"
                         v-if="isActive"
                         :flashcard="flashcard"
@@ -154,6 +155,6 @@
     </div>
   </footer>
 
-    <script src="{{ url_for('quiz.static', filename='exam.js') }}"></script>`
+    <script src="{{ url_for('quiz.static', filename='exam.js') }}"></script>
   </body>
 {% endblock continue %}
