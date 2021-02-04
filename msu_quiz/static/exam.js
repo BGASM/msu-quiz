@@ -191,10 +191,11 @@ app.component('mcqbutton', {
     },
 
   template: `
-    <div class="form-check">  
+    <div class="form-check p-0">  
     <a href="#"
     class="list-group-item list-group-item-action"
     name="mcq"
+
     :key="mc.id"
     :class="mcqClass"
     @click="selected(mc.id)">
