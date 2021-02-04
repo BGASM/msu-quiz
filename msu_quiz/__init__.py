@@ -38,4 +38,7 @@ def create_app():
         from .views.auth import auth_bp
         app.register_blueprint(auth_bp)
 
+        from .views.quiz import api_bp
+        app.register_blueprint(api_bp, url_prefix='/api')
+
         return app

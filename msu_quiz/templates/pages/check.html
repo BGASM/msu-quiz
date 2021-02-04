@@ -6,35 +6,15 @@
 {% block page_header_p %}
 {% endblock %}
 {% block content %}
-<div class="jumbotron">
-  <h1 class="display-3">You scored </h1>
-  <p class="lead">This is a prototype. In the future exam review will be similar to Examplify.</p>
-  <hr class="my-4">
-  {% for index in qlist %}
-    <p>{{ index.test_no}}) {{index.question}}</p>
-    {% for mcq in index.mcq %}
-      {% if index.correct == False %}
-          {% if mcq.id == index.choice %}
-            <p class="text-danger">{{mcq.mc}}</p>
-          {% else %}
-            {% if mcq.mc == index.answer %}
-                <p class="text-success">{{mcq.mc}}</p>
-            {% else %}
-                <p>{{mcq.mc}}</p>
-            {% endif %}
-          {% endif %}
-      {% else %}
-          {% if mcq.id == index.choice %}
-            <p class="text-success">{{mcq.mc}}</p>
-          {% else %}
-          <p>{{mcq.mc}}</p>
-          {% endif %}
-      {% endif %}
-    {% endfor %}
-    <br>
-  {% endfor %}
+<script src="https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js"></script>
+<div class="jumbotron" id="results">
+
+    <score v-if="isActive" :score="score"></score>
+    <exam_review v-if="isActive" :exam_questions="exam_data.exam_questions"></exam_review>
+
   <p class="lead">
-    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+    <a class="btn btn-primary btn-lg" href="{{url_for('quiz.index')}}" role="button">All Done!</a>
   </p>
 </div>
+<script src="{{ url_for('quiz.static', filename='check.js') }}"></script>`
 {% endblock %}

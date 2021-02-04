@@ -2,38 +2,39 @@
 {% block title %}Qbank{% endblock title %}
 {% block head %}{{ super() }}
 <script type="text/javascript">
-    $(document).ready(function() {
-    var table = $('#quizTable').DataTable({
-     responsive: true,
-        "columnDefs": [{
-        "visible": false,
-        "targets": 5
-      }],
-      select: {
-        style: 'multi'
-      },
-      dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'p>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'B>>",
-      buttons: [{
-        text: 'Load Quizzes',
-        action: function(e, dt, node, config) {
-          return_data(table);
-        }
-      }]
-    });
-
-
+ $(document).ready(function() {
+  var data = {{ rows | safe }};
+  console.log(data)
+  var table = $('#quizTable').DataTable({
+    data: data,
+    columns: [
+      { data: 'title' },
+      { data: 'course' },
+      { data: 'no_questions' },
+      { data: 'user' },
+      { data: 'ranking' },
+    ],
+    responsive: true,
+    select: { style: 'multi' },
+    dom: "<'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'p>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'B>>",
+    buttons: [{
+      text: 'Load Quizzes',
+      action: function(e, dt, node, config) {
+        return_data(table);
+      }
+    }]
+  });
 });
 
 function return_data(table) {
   var selected = []
-  table.rows({
+    table.rows({
     selected: true
   }).every(function(rowIdx) {
-    selected.push(table.row(rowIdx).data())
+    selected.push(table.row(rowIdx).data().id)
   });
-  console.log(selected)
   $.ajax({
     type: 'POST',
     url: "{{ url_for('quiz.quiz')}}",
@@ -68,21 +69,9 @@ function return_data(table) {
                 <th>Questions</th>
                 <th>Creator</th>
                 <th>Ranking</th>
-                <th>Quiz ID</th>
               </tr>
             </thead>
-            <tbody>
-            {% for row in rows %}
-                <tr>
-                    <td>{{ row.title }}</td>
-                    <td>{{ row.course }}</td>
-                    <td>{{ row.no_questions }}</td>
-                    <td>{{ row.user }}</td>
-                    <td>{{ row.ranking }}</td>
-                    <td>{{ row.id }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
+
           </table>
 
 </div>

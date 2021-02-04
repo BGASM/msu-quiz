@@ -17,10 +17,10 @@
     <meta name="description" content="">
     <meta name="author" content="BGASM">
 
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/dt-1.10.23/b-1.6.5/sl-1.3.1/datatables.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/2.0.3/jquery.mobile-events.min.js"></script>
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css" integrity="sha384-8iuq0iaMHpnH2vSyvZMSIqQuUnQA7QM+f6srIdlgBrTSEyd//AWNMyEaSF2yPzNQ" crossorigin="anonymous">
     <title>Practice Quiz - MSU Class 2024 Qbank</title>
 
@@ -28,10 +28,12 @@
     $(window).on('load', function() {
         $('#startModal').modal('show');
     });
-</script>
+    </script>
+
 {% endblock start %}}
 {% block continue %}
   <body class="d-flex flex-column min-vh-100">
+    <div id="vue-template">
     <div class ="modal" id="startModal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -39,35 +41,36 @@
                 <h5 class="modal-title">Begin Exam?</h5>
               </div>
               <div class="modal-body">
-                <p>Timer will start once you click start</p>
+                <p>Select if you want to be graded after each question or only at the end of test.</p>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Start!</button>
+                <button v-on:click="toggleActive(false)" type="button" class="btn btn-primary" data-dismiss="modal">Grade at end</button>
+                <button v-on:click="toggleActive(true)" type="button" class="btn btn-primary" data-dismiss="modal">Grade as I go</button>
               </div>
             </div>
         </div>
     </div>
-
-    <div class="modal" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="submitModalLongTitle">Submit Exam?</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Are you ready to submit your exam? One you click submit you will have a chance to review your exam.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" id="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <div v-if="issubmit">
+        <div class="modal" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="submitModalLongTitle">Submit Exam?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>Are you ready to submit your exam? One you click submit you will have a chance to review your exam.</p>
+              </div>
+              <div class="modal-footer">
+                <button @click="posthome" type="button" id="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
     </div>
-
     <header>
     <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-primary" style="">
       <a class="navbar-brand" href="{{ url_for('quiz.index') }}">MSU Class 2024 Qbank</a>
@@ -95,146 +98,62 @@
       </div>
     </nav>
   </header>
-
-  <main role="main">
-    <div class="d-flex min-vh-100" >
-      <div class="card text-white bg-primary mr-auto flex-shrink-1 text-center d-none d-md-block">
-        <div class="card-header text-center text-uppercase p-0">Q #</div>
+        <main role="main">
+        <div class="d-flex min-vh-100" >
+        <div class="card text-white bg-primary mr-auto flex-shrink-1 text-center d-none d-md-block">
+            <div class="card-header text-center text-uppercase p-0">Q #</div>
             <div class="card-body m-0 p-0">
-                 <ul class="navbar-nav " id="question_list">
-                    {% for index in qlist %}
-                    <li>
-                        <button
-                            type="button"
-                            class="btn btn-link btn-sm"
-                            id="{{ index.test_no }}"
-                            data-test_no="{{ index.test_no }}">
-                            {{ index.test_no }}
-                            </button>
+                <ul id="question_list" class="navbar-nav" >
+                    <li v-for="exam in myexams">
+                        <buttonquestion :buttontext="exam.question_no" @updatequestion="updatequestion"></buttonquestion>
                     </li>
-                    {% endfor %}
                 </ul>
             </div>
         </div>
-        <div class="d-flex flex-grow-1 container-fluid m-0 p-0" >
-        <div class="p-2 flex-grow-1 align-self-stretch mr-auto">
-          <div id="question_placement" style="max-width: 980px;"></div>
+        <div class="d-flex flex-column flex-grow-1 container-fluid m-0 p-0" >
 
-            <div class="btn-group" role="group" id="btn-group" hidden>
-                <button class="btn btn-primary" type="button" value="Previous">
-                    Previous
-                </button>
-                <button class="btn btn-primary" type="button" value="Next">
-                    Next
-                </button>
-                <button class="btn btn-primary" type="button" value="Flag">
-                    Flag
-                </button>
-                <button type="button" id="submitbutton" class="btn btn-primary" data-toggle="modal" data-target="#submitModal" hidden>
-                  Submit
-                </button>
+            <div class="jumbotron d-flex flex-column" id="test_question" style="padding-bottom: 10px; padding-top: 20px;">
+                <div id="question_placement" style="max-width: 980px;">
+                    <question-return
+                        v-if="isActive"
+                        :qno="refreshQuestion.question_no"
+                        :question="refreshQuestion.question.question"
+                        :mcqs="refreshQuestion.mcq_list"
+                        :answer="refreshQuestion.question.answer"
+                        :flashcard="flashcard"
+                        :immediate="immediate"
+                        ></question-return>
+                </div>
             </div>
+                <quiznavigation @ahead="ahead" @behind="behind" @submit="submit" @flashahead="flashahead"
+                        v-if="isActive"
+                        :flashcard="flashcard"
+                        :endofexam="endofexam"
+                        :immediate="immediate"
+                ></quiznavigation>
 
-            <div class="row">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
+        </div>
 
-				</div>
-				<div class="col-md-4"></div>
-			</div>
-        </div>
-        </div>
-      </div>
-    </main>
+
+
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+            </div>
+            </div>
+          </div>
+        </main>
 
     <footer class="bd-footer">
     <div class="container-fluid">
       <span class="text-muted">© Copyright 2021 by BGASM.</span>
     </div>
   </footer>
-    <script type="text/javascript">
-        var q_no = 1;
-        var max_q_no = document.getElementById("question_list").getElementsByTagName("li").length
-        console.log(max_q_no)
-        $('#startModal').on('click', 'button', function(){
-            var quid = document.getElementById(1);
-            document.getElementById("btn-group").hidden = false;
-            sessionStorage.clear();
-            get_question(quid.dataset.test_no);
-        });
 
-        $('#submitModal').on('click', '.btn-primary ', function(){
-            var local = JSON.stringify(sessionStorage)
-            $.ajax({
-                type: 'POST',
-                url: "{{ url_for('quiz.exam')}}",
-                data: local,
-                contentType: 'application/json; charset=ytf-8',
-                success: function(response) {
-                  window.location.href = response;
-                },
-                error: function(result) {
-                  alert('oops');
-                }
-          });
-        })
-        $(function() {
-            if (jQuery.isTouchCapable() == true) {
-            $('body').on('swipeleft', function(e) { next_page('Next'); })
-                     .on('swiperight', function(e) { next_page('Previous'); })
-            }
-        });
-
-        function next_page( btn_sel )
-        {
-            if (btn_sel == 'Next'){
-                if (q_no < max_q_no) {
-                    q_no++;
-                    var id = document.getElementById(q_no);
-                    document.getElementById("submitbutton").hidden = true;
-                    get_question(id.dataset.test_no);
-                } else if (q_no == max_q_no) {
-                    document.getElementById("submitbutton").hidden = false;
-                }
-            } else if (btn_sel == 'Previous'){
-                if (q_no > 1){
-                    q_no--;
-                    var id = document.getElementById(q_no);
-                    document.getElementById("submitbutton").hidden = true;
-                    get_question(id.dataset.test_no);
-                }
-            } else if (btn_sel == 'Flag'){
-                alert(btn_sel)
-            }
-        }
-
-        $('body').on('click', '.btn-group button', function(e){
-            var btn_sel = $(this).val()
-            console.log(btn_sel)
-            next_page(btn_sel)
-        });
-
-        function get_question(test_no) {
-            console.log(test_no)
-            $.ajax({
-                type: 'get',
-                url: "{{ url_for('quiz.question_return')}}",
-                data: {test_no: test_no},
-                success: function (response) {
-                    $("#question_placement").html(response)
-                },
-                error: function (result) {
-                    alert('oops');
-                }
-            });
-        }
-
-        $('#question_list').on('click', 'button', function(e){
-            var id = document.getElementById(e.target.id);
-            q_no = id.dataset.test_no;
-            get_question(id.dataset.test_no);
-        });
-    </script>
-
+    <script src="{{ url_for('quiz.static', filename='exam.js') }}"></script>`
   </body>
 {% endblock continue %}

@@ -6,8 +6,47 @@ from flask_login import UserMixin
 from loguru import logger
 from msu_quiz import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
+import random as rand
 
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field, fields
+
+
+class Exam(db.Model):
+    __tablename__ = 'exam'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime(timezone=True), default=db.func.now())
+    score = db.Column(db.Integer, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
+
+    exam_questions = relationship("ExamQuestion", backref="exam", cascade="all, delete",
+                                  passive_deletes=True)
+
+    def add_self(self):
+        db.session.add(self)
+        db.session.commit()
+
+class ExamQuestion(db.Model):
+    __tablename__ = 'exam_question'
+    id = db.Column(db.Integer, primary_key=True)
+    exam_id = db.Column(db.Integer, db.ForeignKey('exam.id', ondelete="CASCADE"))
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
+    question_no = db.Column(db.Integer)
+    ans_selected = db.Column(db.String(), nullable=True)
+    ans_correct = db.Column(db.Boolean(), nullable=True)
+
+    question = relationship("Question", backref="exam_question")
+    mcq_list = relationship("MCQinQuestion", backref="exam_question", cascade="all, delete", passive_deletes=True)
+
+
+class MCQinQuestion(db.Model):
+    __tablename__ = 'mcq_in_question'
+    id = db.Column(db.Integer, primary_key=True)
+    exam_question_id = db.Column(db.Integer, db.ForeignKey('exam_question.id', ondelete="CASCADE"))
+    mcq_id = db.Column(db.Integer, db.ForeignKey('MCQ.id'))
+    mcq_no = db.Column(db.Integer)
+
+    mc = relationship("MCQ", backref="mcq_in_question")
+
 
 
 class Quiz(db.Model):
@@ -19,8 +58,10 @@ class Quiz(db.Model):
     no_questions = db.Column(db.Integer, nullable=False)
     user = db.Column(db.String(), nullable=False)
     ranking = db.Column(db.Integer, nullable=False, default=0)
+    created_on = db.Column(db.DateTime(timezone=True), default=db.func.now())
     questions = relationship("Question", backref="quiz", cascade="all, delete",
                              passive_deletes=True)
+
 
     def add_self(self):
         db.session.add(self)
@@ -40,6 +81,11 @@ class Question(db.Model):
     answer = db.Column(db.String(), nullable=False)
     #course = db.Column(db.String(), nullable=False)
     mcqs = relationship("MCQ", backref="question", cascade="all, delete", passive_deletes=True)
+
+    def shuffle_mcq(self):
+        mcqs = [mcq.id for mcq in self.mcqs]
+        rand.shuffle(mcqs)
+        return mcqs
 
 
 
@@ -70,7 +116,7 @@ class MCQ(db.Model):
 
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
 
@@ -84,6 +130,10 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), nullable=True, unique=True)
 
     _password = db.Column(db.String(255), nullable=True)
+    created_on = db.Column(db.DateTime(timezone=True), default=db.func.now())
+
+    exams = relationship("Exam", backref="user", cascade="all, delete",
+                         passive_deletes=True)
 
     @hybrid_property
     def passwd(self):
@@ -151,3 +201,48 @@ class QuizSchema(SQLAlchemyAutoSchema):
         sqla_session = db.session
 
     questions = fields.Nested(QuestionSchema, many=True)
+
+
+class MCQinQuestionSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = MCQinQuestion
+        include_relationships = True
+        include_fk = True
+        load_instance = True
+        sqla_session = db.session
+
+
+    mc = fields.Nested(MCQSchema)
+
+
+class ExamQuestionSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = ExamQuestion
+        include_relationships = True
+        include_fk = True
+        load_instance = True
+        sqla_session = db.session
+
+
+    question = fields.Nested(QuestionSchema(only=("id", "question", "answer")))
+    mcq_list = fields.Nested(MCQinQuestionSchema(only=("mcq_no", "mc")), many=True)
+
+
+class ExamSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Exam
+        include_relationships = True
+        include_fk = True
+        load_instance = True
+        sqla_session = db.session
+
+
+    exam_questions = fields.Nested(ExamQuestionSchema(only=("question_no", "question", "mcq_list")), many=True)
+
+
+class UserSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = User
+        include_relationships = True
+        load_instance = True
+        sqla_session = db.session
