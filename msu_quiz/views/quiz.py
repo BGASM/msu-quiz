@@ -10,6 +10,8 @@ from msu_quiz.utils.forms import AddQuestionForm, EmailForm, PasswordForm
 from pprint import pprint
 from loguru import logger
 
+myExam = dom.MyExam()
+
 
 quiz_bp = Blueprint(
     'quiz', __name__,
@@ -84,7 +86,7 @@ def index():
 @api_bp.route("/get_exam")
 @login_required
 def get_exam():
-    return {'exam_data': session['exam_data']}
+    return {'exam_data': myExam.exam_data}
 
 
 @quiz_bp.route('/exam', methods=['GET', 'POST'])
@@ -92,7 +94,7 @@ def get_exam():
 def exam():
     logger.debug('In Exam Function.')
     if request.method == "POST":
-        return dom.score_exam(request.get_json())
+        return myExam.score_exam(request.get_json())
     return render_template('pages/exam.html')
 
 
@@ -101,7 +103,7 @@ def exam():
 def quiz():
     schema = QuizSchema(only=("id", "title", "course", "no_questions", "user", "ranking"))
     if request.method == "POST":
-        return dom.create_exam(quiz_id_list=request.get_json(), user=current_user)
+        return myExam.create_exam(quiz_id_list=request.get_json(), user=current_user)
     return render_template('pages/quiz.html', rows=schema.dump(Quiz.query.all(), many=True))
 
 
