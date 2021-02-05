@@ -45,6 +45,7 @@ class MyExam():
         exam.add_self()
         a_key = ExamSchema()
         self.dump = a_key.dump(exam)
+        logger.debug(self.dump)
         return url_for('quiz.exam')
 
 
@@ -74,12 +75,6 @@ class MyExam():
         db_exam.score = score
         db.session.add(db_exam)
         db.session.commit()
-        self.exam_data = exam_data
+        self.dump = exam_data
         pprint(exam_data, indent=2)
         return jsonify(url_for('quiz.check'))
-
-
-
-
-    for mc in index['QA']['mcqs']:
-        mcqs.append([mc, db.session.query(MCQ.mcq).filter(MCQ.id == mc).first()[0]])

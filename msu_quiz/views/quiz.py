@@ -86,7 +86,8 @@ def index():
 @api_bp.route("/get_exam")
 @login_required
 def get_exam():
-    return {'exam_data': myExam.exam_data}
+    logger.debug(myExam.dump)
+    return {'exam_data': myExam.dump}
 
 
 @quiz_bp.route('/exam', methods=['GET', 'POST'])
