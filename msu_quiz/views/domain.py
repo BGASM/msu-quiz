@@ -27,16 +27,21 @@ def add_quiz(form=None, user=None):
 
 def create_exam(quiz_id_list=None, user=None):
     quiz_list = [Quiz.query.filter_by(id=x).first() for x in quiz_id_list]
+    logger.critical(quiz_list)
     questions_list = [x.questions for x in quiz_list]
     q_list = list(chain(*questions_list))
     rand.shuffle(q_list)
+    logger.critical(q_list)
     exam = Exam(user_id=user.id)
     for n, question in enumerate(q_list, start=1):
         mcq = question.shuffle_mcq()
+        logger.critical(mcq)
         eq = ExamQuestion(question_no=n, question_id=question.id)
+
         for x, mc in enumerate(mcq, start=1):
             eq.mcq_list.append(MCQinQuestion(mcq_no=x, mcq_id=mc))
         exam.exam_questions.append(eq)
+    logger.critical(exam)
     exam.add_self()
     a_key = ExamSchema()
     session['exam_data'] = a_key.dump(exam)
