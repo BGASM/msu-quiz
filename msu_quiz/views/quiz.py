@@ -1,13 +1,11 @@
-from msu_quiz.models.models import MCQ, Question, Quiz, User, QuizSchema
-from sortedcontainers.sorteddict import SortedDict
+from msu_quiz.models.models import Quiz, User, QuizSchema
 from msu_quiz import db
 from . import domain as dom
 from flask_login import login_required, current_user
-from flask import Blueprint, redirect, render_template, session, flash, request, url_for, jsonify
+from flask import Blueprint, redirect, render_template, request, url_for, jsonify
 from msu_quiz.utils.mail import send_mail
 from msu_quiz.utils.security import ts
 from msu_quiz.utils.forms import AddQuestionForm, EmailForm, PasswordForm
-from pprint import pprint
 from loguru import logger
 
 myExam = dom.MyExam()
@@ -86,7 +84,6 @@ def index():
 @api_bp.route("/get_exam")
 @login_required
 def get_exam():
-    logger.debug(myExam.dump)
     return {'exam_data': myExam.dump}
 
 

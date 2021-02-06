@@ -32,6 +32,7 @@ app = Vue.createApp({
     const gObject = await gResponse.json();
     const exam_id = gObject.exam_data.id
     this.myexams = gObject.exam_data.exam_questions
+    console.log(this.myexams)
 
     for (exam of this.myexams) {
       this.graded_exam[exam.question_no] = {
@@ -41,9 +42,10 @@ app = Vue.createApp({
         'selected': ''
       }
       for (mc of exam.mcq_list) {
-        mc.mc['isActive'] = false;
-        mc.mc['isCorrect'] = false;
-        this.graded_exam[exam.question_no].choices.push(mc.mc.id)
+        console.log(mc)
+        mc['isActive'] = false;
+        mc['isCorrect'] = false;
+        this.graded_exam[exam.question_no].choices.push(mc.id)
       }
     }
     this.graded_exam['exam_id'] = exam_id
@@ -135,18 +137,19 @@ app.component('question-return', {
   delimiters: ['[[', ']]'],
   inject: ['exam_questions', 'graded_exam'],
   props: ['qno', 'question', 'mcqs', 'answer', 'flashcard', 'immediate'],
+  created() {console.log(this.mcqs)},
   methods: {
     mcselected(id) {
       var tmp = this.qno
       var mclist = []
       for (mc of this.exam_questions.value[tmp - 1].mcq_list) {
-        if (mc.mc.id == id) {
-          mc.mc.isActive = true
-          var choice = mc.mc.mcq
+        if (mc.id == id) {
+          mc.isActive = true
+          var choice = mc.id
         } else {
-          mc.mc.isActive = false
+          mc.isActive = false
         }
-        mclist.push(mc.mc.id)
+        mclist.push(mc.id)
       }
       this.graded_exam.value[tmp].selected = choice
     }
@@ -159,7 +162,7 @@ app.component('question-return', {
          <div class="form-group list-group">
             <div> 
                 <div v-for="mc in mcqs ">
-                        <mcqbutton :mc="mc.mc" :answer="answer" :flashcard="flashcard" :immediate="immediate" @mcselected="mcselected"></mcqbutton>
+                        <mcqbutton :mc="mc" :answer="answer" :flashcard="flashcard" :immediate="immediate" @mcselected="mcselected"></mcqbutton>
                 </div>
             </div>
         </div>
@@ -169,6 +172,7 @@ app.component('question-return', {
 app.component('mcqbutton', {
   delimiters: ['[[', ']]'],
   props: ['mc', 'answer', 'flashcard', 'immediate'],
+  created() {console.log(this.mc)},
   methods: {
     selected(id) {
       this.$emit('mcselected', id)
@@ -177,7 +181,7 @@ app.component('mcqbutton', {
   computed: {
     mcqClass: function() {
         if (this.immediate) {
-            switch (this.mc.mcq) {
+            switch (this.mc.id) {
                 case this.answer:
                     return 'list-group-item-success'
                     break;
@@ -199,7 +203,7 @@ app.component('mcqbutton', {
     :key="mc.id"
     :class="mcqClass"
     @click="selected(mc.id)">
-    [[ mc.mcq ]]</a>
+    [[ mc.id ]]</a>
     </div>`
 })
 

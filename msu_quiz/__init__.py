@@ -27,7 +27,7 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
 
-    from .models.models import User, Quiz, MCQ, Question
+    from .models.models import User, Quiz, Question, Exam
     migrate.init_app(app, db)
 
 
