@@ -45,11 +45,11 @@ app.component('exam_review', {
   delimiters: ['[[', ']]'],
   props: ['exam_questions'],
   template: `
-    <div v-for="question of exam_questions">    
+    <div v-for="question in exam_questions">    
     <exam_review_question
     :qno="question.test_no"
     :question="question.question"
-    :mcqs="question.mcq_order"
+    :mcqs="question.choices"
     :answer="question.answer"
     :selected="question.selected"
     :correct="question.correct"></exam_review_question>

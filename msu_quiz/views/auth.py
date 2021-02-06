@@ -1,6 +1,6 @@
 import functools
 from loguru import logger
-from msu_quiz.models.models import MCQ, Question, Quiz, User
+from msu_quiz.models.models import Question, Quiz, User
 from msu_quiz import db, login_manager
 from flask import Blueprint, redirect, render_template, session, request, url_for, flash
 from flask_login import login_required, logout_user, current_user, login_user

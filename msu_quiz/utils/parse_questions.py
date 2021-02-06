@@ -14,16 +14,12 @@ def parse_questions(question_answer):
     for match in matches:
         question = " ".join(
             [x[0] for x in re.findall(regex6, match.group(0), re.MULTILINE)])
-
         answer = " ".join(re.findall(regex5, match.group(0), re.MULTILINE))
-
         answer = re.sub(regex3, '', answer, 0,
                         re.MULTILINE).splitlines()
-
-        mcqs = [dict(mcq=x) for x in answer]
+        mcqs = answer
         quiz_list.append(
             dict(question=re.sub(regex4, '', question),
                  answer=answer[0],
                  mcqs=mcqs))
-
     return quiz_list
