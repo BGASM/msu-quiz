@@ -75,6 +75,10 @@ def reset():
 def check():
     return render_template('pages/check.html')
 
+@quiz_bp.route('/hiv', methods=['GET', 'POST'])
+def hiv():
+    return render_template('pages/hiv.html')
+
 
 @quiz_bp.route('/', methods=['GET', 'POST'])
 def index():
