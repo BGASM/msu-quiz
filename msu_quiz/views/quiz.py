@@ -1,10 +1,9 @@
 from msu_quiz.models.models import Quiz, User, QuizSchema
-from msu_quiz import db
+from msu_quiz import db, ts
 from . import domain as dom
 from flask_login import login_required, current_user
 from flask import Blueprint, redirect, render_template, request, url_for, jsonify
 from msu_quiz.utils.mail import send_mail
-from msu_quiz.utils.security import ts
 from msu_quiz.utils.forms import AddQuestionForm, EmailForm, PasswordForm
 from loguru import logger
 
@@ -114,6 +113,10 @@ def add_question():
     return render_template('pages/add_question.html', form=form)
 
 
+@quiz_bp.route('/test', methods=['GET', 'POST'])
+@login_required
+def chat():
+    return render_template('pages/test.html')
 # <-------------------DB stuff--------------------->
 
 

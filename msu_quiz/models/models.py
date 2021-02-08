@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_json import NestedMutableJson
 from sqlalchemy.ext.hybrid import hybrid_property
 from msu_quiz import db
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from loguru import logger
 from msu_quiz import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -91,6 +91,7 @@ class Question(db.Model, MyCustomDB):
 class User(db.Model, MyCustomDB, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
+
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
 
     # User authentication information. The collation='NOCASE' is required

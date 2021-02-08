@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+{{ super() }}
+
+{% endblock %}}
+{% block page_header %}MSUCOM Class of 2024 Qbank{% endblock %}
+{% block page_header_p %}
+
+{% endblock %}
+{% block content %}
+
+<h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
+<div class="message_holder"></div>
+
+<form action="" method="POST">
+      <input type="text" class="message" placeholder="Messages"/>
+      <input type="submit"/>
+</form>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js" integrity="sha512-oFOCo2/3DtjrJG4N27BjSLQWoiBv171sK6a+JiWjp/7agxC2nCUP358AqzxkBUb5jX8g6CYLPdSKQTbC0weCwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var socket = io();
+
+            socket.on('connect', function () {
+                socket.emit('my event', {
+                    data: 'User Connected'
+                })
+            })
+
+            var form = $('form').on('submit', function (e) {
+                e.preventDefault()
+                let user_input = $('input.message').val()
+                socket.emit('post_message', {
+                    message: user_input
+                })
+                $('input.message').val('').focus()
+            })
+
+            socket.on('my response', function (msg) {
+                console.log(msg)
+                $('h3').remove()
+                $('div.message_holder').append('<div><b style="color: #000">' + msg.message + '</b></div>')
+            })
+
+            socket.on('incoming message', function (msg) {
+                console.log(msg)
+                $('h3').remove()
+                $('div.message_holder').append('<div><b style="color: #000">' + msg.user_name + '</b> ' + msg.message + '</div>')
+
+            });
+    });
+    </script>
+
+
+
+
+
+
+<script data-name="BMC-Widget" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="beargasm" data-description="Support me on Buy me a coffee!" data-message="Thank you for visiting. If you are finding this site useful, feel free to buy me a coffee!" data-color="#40DCA5" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+</div>
+{% endblock %}

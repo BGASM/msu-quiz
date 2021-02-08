@@ -31,6 +31,12 @@ class Config(object):
     BCRYPT_LOG_ROUNDS = 12
     SENDGRID_API_KEY = environ['SG_API']
 
+    broker_url = environ.get('RABBIT_MQ_URL', 'redis://'),
+    result_backend = environ.get('REDIS_URL', 'redis://')
+    SOCKETIO_MESSAGE_QUEUE = environ.get('REDIS_URL')
+
+
+
 class ProductionConfig(Config):
     DEBUG = False
 
@@ -48,3 +54,13 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    CELERY_CONFIG = {'CELERY_ALWAYS_EAGER': True}
+    SOCKETIO_MESSAGE_QUEUE = None
+
+
+config = {
+    'development': DevelopmentConfig,
+    'production': ProductionConfig,
+    'testing': TestingConfig
+}
