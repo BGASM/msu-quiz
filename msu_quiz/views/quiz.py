@@ -117,12 +117,3 @@ def add_question():
         return dom.add_quiz(form=form, user=current_user.name)
     return render_template('pages/add_question.html', form=form)
 
-
-# <-------------------DB stuff--------------------->
-
-
-
-
-
-
-

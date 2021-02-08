@@ -24,37 +24,37 @@
 {% endblock start %}
 {% block continue %}
 <body class="d-flex flex-column h-100">
-   <header>
-      <!-- Fixed navbar -->
-      <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-primary" style>
-         <a class="navbar-brand" href="{{ url_for('quiz.index') }}">MSU Class 2024 Qbank</a>
-         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-         <span class="navbar-toggler-icon"></span>
-         </button>
-         <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav">
-               <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('quiz.quiz') }}">Practice</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('quiz.add_question') }}">Add Quiz</a>
-               </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('quiz.hiv') }}">Shitty HIV Problems</a>
-               </li>
-               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
-                  <div class="dropdown-menu">
-                     <a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a>
-                     <a class="dropdown-item" href="{{ url_for('auth.register') }}">Register</a>
-                     <div class="dropdown-divider"></div>
-                     <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
-                  </div>
-               </li>
-            </ul>
-         </div>
-      </nav>
-   </header>
+<header>
+<!-- Fixed navbar -->
+<nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-primary" style>
+<a class="navbar-brand" href="{{ url_for('quiz.index') }}">MSU Class 2024 Qbank</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarResponsive">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('quiz.quiz') }}">Practice</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('quiz.add_question') }}">Add Quiz</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('quiz.hiv') }}">Shitty HIV Problems</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a>
+                <a class="dropdown-item" href="{{ url_for('auth.register') }}">Register</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
+            </div>
+        </li>
+    </ul>
+</div>
+</nav>
+</header>
    <!-- Begin page content -->
    <main role="main">
       <div class="d-flex flex-column align-items-center flex-grow-1 container-fluid min-vh-100 justify-content-start" >
