@@ -1,1 +1,1 @@
-web: gunicorn "msu_quiz:create_app()"
+web: py -m msu_quiz.main_service
