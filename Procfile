@@ -1,1 +1,1 @@
-web: py -m msu_quiz.main_service
+web: gunicorn --worker-class eventlet -w 1 msu_quiz.main_service
